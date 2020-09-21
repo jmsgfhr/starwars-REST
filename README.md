@@ -1,5 +1,4 @@
 # StarWars-REST
-[![Generic badge](https://img.shields.io/badge/<made with>-<nodejs>-<brightgreen>.svg)](https://nodejs.org/)
 
 StarWars-REST é uma API de registro de planetas da franquia Star Wars desenvolvida em [Node.js](https://nodejs.org/).
 
@@ -18,4 +17,28 @@ Na pasta raiz do programa use o código abaixo:
 
 ```bash
 npm start
+```
+
+## Rotas
+
+As rotas disponiveis são:
+
+```bash
+# GET
+
+localhost:8080/planets
+localhost:8080/planets/:name
+localhost:8080/planets/:id
+
+# POST
+
+localhost:8080/planet
+
+# PUT
+
+localhost:8080/planet/:id/update
+
+# DELETE
+
+localhost:8080/planet/:id/delete
 ```
