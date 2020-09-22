@@ -27,12 +27,13 @@ As rotas disponiveis são:
 # GET
 
 localhost:8080/planets
-localhost:8080/planets/:name
 localhost:8080/planets/:id
+localhost:8080/travel/:name
 
 # POST
 
 localhost:8080/planet
+localhost:8080/planets/populate
 
 # PUT
 

@@ -2,6 +2,8 @@
 const axios = require('axios');
 const Planet = require('../models/planet.model');
 
+// GET functions
+
 exports.get = (req, res) => {
   Planet.find(req.params, (err, planet) => {
     if (err) return err;
@@ -9,11 +11,26 @@ exports.get = (req, res) => {
   });
 };
 
+exports.travel_to_planet = (req, res) => {
+  Planet.find({ name: req.params.name.toUpperCase() }, (err, planet) => {
+    if (planet.length !== 0) res.send(planet);
+    else res.send('Viajar pelo hiperespaço não é igual passear pelo parquinho não, garoto.');
+  });
+};
+
+exports.planet_by_id = (req, res) => {
+  Planet.findById(req.params.id, (err, planet) => {
+    if (err) return err;
+    res.send(planet);
+  });
+};
+
+// POST functions
+
 exports.post = (req, res) => {
-  let episodesQnt;
   axios.get(`https://swapi.dev/api/planets/?search=${req.body.name.toUpperCase()}`)
     .then((response) => {
-      episodesQnt = response.data.results[0].films;
+      const episodesQnt = response.data.results[0].films;
 
       const planet = new Planet(
         {
@@ -37,19 +54,7 @@ exports.post = (req, res) => {
     });
 };
 
-exports.planet_by_id = (req, res) => {
-  Planet.findById(req.params.id, (err, planet) => {
-    if (err) return err;
-    res.send(planet);
-  });
-};
-
-exports.planet_by_name = (req, res) => {
-  Planet.find({ name: req.params.name }, (err, planet) => {
-    if (err) return err;
-    res.send(planet);
-  });
-};
+// PUT functions
 
 exports.planet_update = (req, res) => {
   req.body.name = req.body.name.toUpperCase();
@@ -60,6 +65,35 @@ exports.planet_update = (req, res) => {
     res.send('Planeta atualizado!!');
   });
 };
+
+exports.planet_populate = (req, res) => {
+  axios.get('https://swapi.dev/api/planets/')
+    .then((response) => {
+      const resp = response.data.results;
+      // eslint-disable-next-line no-plusplus
+      for (let index = 0; index < resp.length; index++) {
+        const planet = new Planet(
+          {
+            name: resp[index].name.toUpperCase(),
+            weather: resp[index].climate.toUpperCase(),
+            terrain: resp[index].terrain.toUpperCase(),
+          },
+        );
+
+        planet.save((err) => {
+          if (err) {
+            return err;
+          }
+        });
+      }
+      res.send('Há muito tempo numa galáxia muito muito distante');
+    })
+    .catch((error) => {
+      res.send(error);
+    });
+};
+
+// DELETE functions
 
 exports.planet_delete = (req, res) => {
   Planet.findByIdAndRemove(req.params.id, (err) => {
